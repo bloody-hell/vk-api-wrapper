@@ -104,18 +104,25 @@ class VkApi
      */
     public function getUsers(array $ids, $name_case = self::CASE_NOMINATIVE, array $fields = array())
     {
-        return array_map(
-            function($item){
-                $user = new User();
-                $user->setAttributes($item);
-                return $user;
-            },
-            $this->getApi()->api('users.get', [
-                'user_ids' => implode(',', $ids),
-                'fields' => implode(',', $fields),
+        $result = $this->getApi()->api(
+            'users.get',
+            [
+                'user_ids'  => implode(',', $ids),
+                'fields'    => implode(',', $fields),
                 'name_case' => $name_case,
-            ])
+            ]
         );
+        if(isset($result['response'])){
+            return array_map(
+                function($item){
+                    $user = new User();
+                    $user->setAttributes($item);
+                    return $user;
+                },
+                $result['response']
+            );
+        }
+        return array();
     }
 
     /**
