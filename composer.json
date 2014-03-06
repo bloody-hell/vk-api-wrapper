@@ -1,0 +1,21 @@
+{
+    "name": "bloody_hell/vk-api-wrapper",
+    "description": "VK API OOP wrapper",
+    "keywords": ["vk", "extension"],
+    "type": "extension",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Ivan Poponin",
+            "email": "juf.halli@gmail.com"
+        }
+    ],
+    "require" : {
+        "vladkens/vk": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "bloody_hell\\vk-api-wrapper\\": ""
+        }
+    }
+}
