@@ -1,5 +1,5 @@
 {
-    "name": "bloody_hell/vk-api-wrapper",
+    "name": "bloody-hell/vk-api-wrapper",
     "description": "VK API OOP wrapper",
     "keywords": ["vk", "extension"],
     "type": "extension",
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "bloody_hell\\vk-api-wrapper\\": ""
+            "bloody_hell\\vk_api_wrapper\\": ""
         }
     }
 }
