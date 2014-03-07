@@ -37,10 +37,10 @@ class DatabaseApi
         $result = $this->getApi()->api(
             'database.getCitiesById',
             [
-                'user_ids'  => $id,
+                'city_ids'  => $id,
             ]
         );
-        if(isset($result['response'])){
+        if(isset($result['response']) && $result['response']){
             $city = new City($this->getApi());
             $city->setAttributes($result['response'][0]);
             return $city;
@@ -61,7 +61,7 @@ class DatabaseApi
                 'country_ids'  => $id,
             ]
         );
-        if(isset($result['response'])){
+        if(isset($result['response']) && $result['response']){
             $country = new Country($this->getApi());
             $country->setAttributes($result['response'][0]);
             return $country;
