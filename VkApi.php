@@ -27,116 +27,30 @@ class VkApi
         return $this->_api;
     }
 
-    /**
-     * Именительный падеж
-     */
-    const CASE_NOMINATIVE = 'nom';
+    private $_db_api;
 
-    /**
-     * Родительный падеж
-     */
-    const CASE_GENITIVE = 'gen';
+    private $_user_api;
 
-    /**
-     * Дательный падеж
-     */
-    const CASE_DATIVE = 'dat';
-
-    /**
-     * Винительный
-     */
-    const CASE_ACCUSATIVE = 'acc';
-
-    /**
-     * Творительный
-     */
-    const CASE_INSTRUMENTAL = 'ins';
-
-    /**
-     * Предложный
-     */
-    const CASE_PREPOSITIONAL = 'abl';
-
-    const FIELD_USER_UID = 'uid';
-
-    const FIELD_USER_FIRST_NAME = 'first_name';
-
-    const FIELD_USER_LAST_NAME = 'last_name';
-
-    const FIELD_USER_NICKNAME = 'nickname';
-
-    const FIELD_USER_SCREEN_NAME = 'screen_name';
-
-    const FIELD_USER_SEX = 'sex';
-
-    const FIELD_USER_BDATE = 'bdate';
-
-    const FIELD_USER_CITY = 'city';
-
-    const FIELD_USER_COUNTRY = 'country';
-
-    const FIELD_USER_TIMEZONE = 'timezone';
-
-    const FIELD_USER_PHOTO = 'photo';
-
-    const FIELD_USER_PHOTO_MEDIUM = 'photo_medium';
-
-    const FIELD_USER_PHOTO_BIG = 'photo_big';
-
-    const FIELD_USER_HAS_MOBILE = 'has_mobile';
-
-    const FIELD_USER_RATE = 'rate';
-
-    const FIELD_USER_CONTACTS = 'contacts';
-
-    const FIELD_USER_EDUCATION = 'education';
-
-    const FIELD_USER_ONLINE = 'online';
-
-    const FIELD_USER_COUNTERS = 'counters';
-
-    /**
-     * @param array  $ids
-     * @param string $name_case
-     * @param array  $fields
-     *
-     * @return User[]
-     */
-    public function getUsers(array $ids, $name_case = self::CASE_NOMINATIVE, array $fields = array())
+    public function db()
     {
-        $result = $this->getApi()->api(
-            'users.get',
-            [
-                'user_ids'  => implode(',', $ids),
-                'fields'    => implode(',', $fields),
-                'name_case' => $name_case,
-            ]
-        );
-        if(isset($result['response'])){
-            return array_map(
-                function($item){
-                    $user = new User();
-                    $user->setAttributes($item);
-                    return $user;
-                },
-                $result['response']
-            );
+        if(!$this->_db_api){
+            $this->_db_api = new DatabaseApi($this);
         }
-        return array();
+
+        return $this->_db_api;
     }
 
-    /**
-     * @param        $uid
-     * @param string $name_case
-     * @param array  $fields
-     *
-     * @return User|null
-     */
-    public function getUser($uid, $name_case = self::CASE_NOMINATIVE, array $fields = array())
+    public function users()
     {
-        if($users = $this->getUsers([$uid], $name_case, $fields)){
-            return $users[0];
+        if(!$this->_user_api){
+            $this->_user_api = new UsersApi($this);
         }
-        return null;
+
+        return $this->_user_api;
+    }
+
+    public function api($method, $parameters = array(), $format = 'array')
+    {
+        return $this->getApi()->api($method, $parameters, $format);
     }
 } 

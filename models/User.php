@@ -51,4 +51,58 @@ class User extends Model
     public $graduation;
 
     public $online;
-} 
+
+    /**
+     * @var bool|City
+     */
+    private $_city = false;
+
+    /**
+     * @var bool|Country
+     */
+    private $_country = false;
+
+    /**
+     * @return City
+     */
+    public function getCity()
+    {
+        if($this->_city === false){
+            $this->_city = $this->fetchCity();
+        }
+        return $this->_city;
+    }
+
+    /**
+     * @return City
+     */
+    public function fetchCity()
+    {
+        if($this->city){
+            return $this->getApi()->db()->getCity($this->city);
+        }
+        return null;
+    }
+
+    /**
+     * @return Country
+     */
+    public function getCountry()
+    {
+        if($this->_country === false){
+            $this->_country = $this->fetchCity();
+        }
+        return $this->_country;
+    }
+
+    /**
+     * @return Country
+     */
+    public function fetchCountry()
+    {
+        if($this->country){
+            return $this->getApi()->db()->getCountry($this->country);
+        }
+        return null;
+    }
+}
