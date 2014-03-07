@@ -37,7 +37,7 @@ class DatabaseApi
         $result = $this->getApi()->api(
             'database.getCitiesById',
             [
-                'user_ids'  => implode(',', $id),
+                'user_ids'  => $id,
             ]
         );
         if(isset($result['response'])){
@@ -58,7 +58,7 @@ class DatabaseApi
         $result = $this->getApi()->api(
             'database.getCountriesById',
             [
-                'country_ids'  => implode(',', $id),
+                'country_ids'  => $id,
             ]
         );
         if(isset($result['response'])){
