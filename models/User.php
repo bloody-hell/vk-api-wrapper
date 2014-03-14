@@ -6,7 +6,7 @@ use bloody_hell\vk_api_wrapper\components\Model;
 
 class User extends Model
 {
-    public $uid;
+    public $id;
 
     public $first_name;
 
