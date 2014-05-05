@@ -36,7 +36,9 @@ class WallPost implements \JsonSerializable
     {
         return [
             'message'       => $this->message,
-            'attachments'   => $this->getAttachments(),
+            'attachments'   => implode(',', array_map(function(IWallPostAttachment $attachment){
+                    return $attachment->jsonSerialize();
+                },$this->getAttachments()))
         ];
     }
 
