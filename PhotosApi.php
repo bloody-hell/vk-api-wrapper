@@ -41,7 +41,7 @@ class PhotosApi
             ]);
 
         if(!isset($response['response'])){
-            throw new UploadServerNotAvailable('Cannot get upload url');
+            throw new UploadServerNotAvailable('Cannot get upload url: ' . (isset($response['error']['error_msg']) ? $response['error']['error_msg'] : 'No error message'));
         }
 
         $request = [];
