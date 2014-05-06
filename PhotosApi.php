@@ -5,8 +5,6 @@ namespace bloody_hell\vk_api_wrapper;
 
 
 use bloody_hell\vk_api_wrapper\models\Photo;
-use bloody_hell\vk_api_wrapper\models\User;
-use yii\helpers\VarDumper;
 
 class PhotosApi
 {
