@@ -4,7 +4,9 @@
 namespace bloody_hell\vk_api_wrapper;
 
 
+use bloody_hell\vk_api_wrapper\models\Photo;
 use bloody_hell\vk_api_wrapper\models\User;
+use yii\helpers\VarDumper;
 
 class PhotosApi
 {
@@ -29,16 +31,22 @@ class PhotosApi
     /**
      * @param integer  $album_id
      * @param string[] $imageUris
+     * @param integer $group_id
      *
-     * @return array
+     * @return Photo[]
      *
      * @throws UploadServerNotAvailable
+     * @throws UploadError
      */
-    public function uploadPhotos($album_id, $imageUris)
+    public function uploadPhotos($album_id, array $imageUris, $group_id = null)
     {
-        $response = $this->getApi()->api('photos.getUploadServer', [
-                'album_id'  => $album_id,
-            ]);
+        $params = [
+            'album_id'  => $album_id,
+        ];
+        if($group_id){
+            $params['group_id'] = $group_id;
+        }
+        $response = $this->getApi()->api('photos.getUploadServer', $params);
 
         if(!isset($response['response'])){
             throw new UploadServerNotAvailable('Cannot get upload url: ' . (isset($response['error']['error_msg']) ? $response['error']['error_msg'] : 'No error message'));
@@ -70,11 +78,26 @@ class PhotosApi
                 'content'   => implode('', $request),
             ]]);
 
-        $post_data = file_get_contents($response['response']['upload_url'], null, $context);
+        $post_data = json_decode(file_get_contents($response['response']['upload_url'], null, $context), true);
 
-        $items = $this->getApi()->api('photos.save', json_decode($post_data, true));
+        if(isset($post_data['aid'])){
+            $post_data['album_id'] = $post_data['aid'];
+        }
+        if(isset($post_data['gid'])){
+            $post_data['group_id'] = $post_data['gid'];
+        }
 
-        return $items['response'];
+        $response = $this->getApi()->api('photos.save', $post_data);
+
+        if(!isset($response['response'])){
+            throw new UploadError('Cannot upload images: ' . (isset($response['error']['error_msg']) ? $response['error']['error_msg'] : 'No error message'));
+        }
+        return array_map(function(array $item){
+                $photo = new Photo($this->getApi());
+                $photo->setAttributes($item);
+                return $photo;
+            }, $response['response']);
     }
 }
 class UploadServerNotAvailable extends \Exception {}
+class UploadError extends \Exception {}
